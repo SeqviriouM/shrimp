@@ -1,71 +1,87 @@
+@import '~styles/variables.scss';
+
+
 /* Filepicker CSS */
 .filepicker {
   font-family: sans-serif;
 }
 
-div.filepicker {
-  min-height: 60px;
-  padding: 5px;
+.upload-area {
+  max-height: 0;
 
-  text-align: center;
+  transition: max-height .9s ease-in-out;
 
-  border: 2px dashed #c7c7c7;
-  border-radius: 5px;
-  background-color: #e1e1e1;
-}
+  &_open {
+    max-height: 200px;
+  }
 
-/* Icon */
-.filepicker-file-icon {
-  position: relative;
+  .filepicker {
+    min-height: 60px;
+    padding: 5px;
 
-  display: inline-block;
+    text-align: center;
+    /* border: 1px dashed #c7c7c7; */
+    /* border-radius: 5px; */
 
-  margin: 1.5em 0 2.5em 0;
-  padding-left: 45px;
+    background-color: $c-gray-50;
+  }
 
-  color: black;
-}
-.filepicker-file-icon::before {
-  position: absolute;
-  top: -7px;
-  left: 0;
+  /* Icon */
+  .filepicker-file-icon {
+    position: relative;
 
-  width: 29px;
-  height: 34px;
+    display: inline-block;
 
-  content: '';
+    margin: 1.5em 0 2.5em 0;
+    padding-left: 45px;
 
-  border: solid 2px #7f7f7f;
-  border-radius: 2px;
-}
-.filepicker-file-icon::after {
-  position: absolute;
-  top: 9px;
-  left: -4px;
+    color: black;
 
-  padding: 0 2px;
+    &::before {
+      position: absolute;
+      top: -7px;
+      left: 0;
 
-  content: 'file';
-  content: attr(data-filetype);
-  text-align: right;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+      width: 29px;
+      height: 34px;
 
-  color: #fff;
-  background-color: #000;
+      content: '';
 
-  font-size: 11px;
-  line-height: 1.3;
-}
-.filepicker-file-icon .fileCorner {
-  position: absolute;
-  top: -7px;
-  left: 22px;
+      border: solid 2px #7f7f7f;
+      border-radius: 2px;
+    }
 
-  width: 0;
-  height: 0;
+    &::after {
+      position: absolute;
+      top: 9px;
+      left: -4px;
 
-  border-width: 11px 0 0 11px;
-  border-style: solid;
-  border-color: white transparent transparent #920035;
+      padding: 0 2px;
+
+      content: 'file';
+      content: attr(data-filetype);
+      text-align: right;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+
+      color: #fff;
+      background-color: #000;
+
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .fileCorner {
+      position: absolute;
+      top: -7px;
+      left: 22px;
+
+      width: 0;
+      height: 0;
+
+      border-width: 11px 0 0 11px;
+      border-style: solid;
+      border-color: white transparent transparent #920035;
+    }
+  }
 }

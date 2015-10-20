@@ -1,9 +1,24 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import DropzoneComponent from 'react-dropzone-component';
+import cx from 'classnames';
 import './styles.scss';
 import './dropzone.min.css';
 
 export default class Upload extends React.Component {
+
+  static propTypes = {
+    openArea: PropTypes.bool,
+    addFile: PropTypes.func,
+    removeFile: PropTypes.func,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      files: {},
+    };
+  }
+
 
   componentConfig = {
     iconFiletypes: ['.jpg', '.png', '.gif'],
@@ -25,13 +40,13 @@ export default class Upload extends React.Component {
     dragleave: null,
     // All of these receive the file as first parameter:
     addedfile: null,
-    removedfile: null,
+    removedfile: this.props.removeFile,
     thumbnail: null,
     error: null,
     processing: null,
     uploadprogress: null,
     sending: null,
-    success: null,
+    success: this.props.addFile,
     complete: null,
     canceled: null,
     maxfilesreached: null,
@@ -57,10 +72,14 @@ export default class Upload extends React.Component {
 
   render() {
     return (
-      <DropzoneComponent
-        config={this.componentConfig}
-        eventHandlers={this.eventHandlers}
-        djsConfig={this.djsConfig} />
+      <div className={cx('upload-area', {
+        'upload-area_open': this.props.openArea,
+      })}>
+        <DropzoneComponent
+          config={this.componentConfig}
+          eventHandlers={this.eventHandlers}
+          djsConfig={this.djsConfig} />
+      </div>
     );
   }
 }

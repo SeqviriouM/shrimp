@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 import multer from 'multer';
+import fs from 'fs';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import startSocketServer from './socket.js';
@@ -98,7 +99,13 @@ app.post('/checkemailexist', (req, res) => {
 });
 
 app.post('/upload', (req, res) => {
-  res.status(204).end();
+  res.json(req.file);
+});
+
+app.delete('/remove-file', (req, res) => {
+  fs.unlink(req.body.filePath, () => {
+    res.sendStatus(200);
+  });
 });
 
 server.listen(port);

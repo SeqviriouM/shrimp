@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Immutable, {Map} from 'immutable';
 import cx from 'classnames';
 import Textarea from 'react-textarea-autosize';
+import Upload from 'components/Upload';
 import './styles.scss';
 
 export default class MessageComposer extends React.Component {
@@ -18,13 +19,16 @@ export default class MessageComposer extends React.Component {
     this.messageMaxLength = 220;
     this.state = {
       text: '',
+      files: {},
+      openArea: false,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !(
       Immutable.is(nextProps.local, this.props.local) &&
-      Immutable.is(nextState.text, this.state.text)
+      Immutable.is(nextState.text, this.state.text) &&
+       Immutable.is(nextState.openArea, this.state.openArea)
     );
   }
 
@@ -43,6 +47,7 @@ export default class MessageComposer extends React.Component {
 
   sendMessage = () => {
     const text = this.state.text.trim();
+    debugger;
     if (text) {
       this.props.newMessage({
         channelId: this.props.local.get('currentChannelId'),
@@ -63,6 +68,35 @@ export default class MessageComposer extends React.Component {
     }
   }
 
+  openUploadArea = () => {
+    this.setState({
+      openArea: !this.state.openArea,
+    });
+  }
+
+  addFile = (file, response) => {
+    this.state.files[file.name] = response.path;
+    this.setState({
+      files: this.state.files,
+    });
+  }
+
+
+  removeFile = (file) => {
+    if (file.status === 'success') {
+      fetch('/remove-file', {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileName: file.name,
+          filePath: this.state.files[file.name],
+        }),
+      });
+    }
+  }
 
   render() {
     const {changeBottom} = this.props;
@@ -70,6 +104,10 @@ export default class MessageComposer extends React.Component {
 
     return (
       <div className='composer'>
+        <button
+          onClick={this.openUploadArea}
+          className='add-channel-button'
+        ></button>
         <div className='composer__sender'>
           <Textarea
             value={this.state.text}
@@ -95,6 +133,7 @@ export default class MessageComposer extends React.Component {
           >Send
           </button>
         </div>
+        <Upload openArea={this.state.openArea} addFile={this.addFile} removeFile={this.removeFile}/>
       </div>
 
     );
