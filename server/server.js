@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import http from 'http';
+import multer from 'multer';
+import fs from 'fs';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import startSocketServer from './socket.js';
@@ -41,6 +43,8 @@ if (isDev && isDebug && process.env.DEBUG.indexOf('shrimp:front') === 0) {
 }
 
 app.use(bodyParser.json());
+
+app.use(multer({ dest: 'uploads/' }).single('file'));
 
 startSocketServer(server);
 
@@ -91,6 +95,16 @@ app.post('/checkemailexist', (req, res) => {
   const email = req.body.email;
   checkEmailExist(email, (exist) => {
     res.json(exist);
+  });
+});
+
+app.post('/upload', (req, res) => {
+  res.json(req.file);
+});
+
+app.delete('/remove-file', (req, res) => {
+  fs.unlink(req.body.filePath, () => {
+    res.sendStatus(200);
   });
 });
 

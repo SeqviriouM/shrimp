@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Immutable, {Map} from 'immutable';
 import cx from 'classnames';
 import Textarea from 'react-textarea-autosize';
+import Upload from 'components/Upload';
 import './styles.scss';
 
 export default class MessageComposer extends React.Component {
@@ -18,13 +19,16 @@ export default class MessageComposer extends React.Component {
     this.messageMaxLength = 220;
     this.state = {
       text: '',
+      files: {},
+      openedArea: false,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !(
       Immutable.is(nextProps.local, this.props.local) &&
-      Immutable.is(nextState.text, this.state.text)
+      Immutable.is(nextState.text, this.state.text) &&
+       Immutable.is(nextState.openedArea, this.state.openedArea)
     );
   }
 
@@ -63,6 +67,35 @@ export default class MessageComposer extends React.Component {
     }
   }
 
+  openUploadArea = () => {
+    this.setState({
+      openedArea: !this.state.openedArea,
+    });
+  }
+
+  addFile = (file, response) => {
+    this.state.files[file.name] = response.path;
+    this.setState({
+      files: this.state.files,
+    });
+  }
+
+
+  removeFile = (file) => {
+    if (file.status === 'success') {
+      fetch('/remove-file', {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileName: file.name,
+          filePath: this.state.files[file.name],
+        }),
+      });
+    }
+  }
 
   render() {
     const {changeBottom} = this.props;
@@ -70,6 +103,12 @@ export default class MessageComposer extends React.Component {
 
     return (
       <div className='composer'>
+        <button
+          onClick={this.openUploadArea}
+          className={cx('composer__open-upload-area', {
+            'composer__open-upload-area_open': this.state.openedArea,
+          })}
+        ></button>
         <div className='composer__sender'>
           <Textarea
             value={this.state.text}
@@ -95,6 +134,7 @@ export default class MessageComposer extends React.Component {
           >Send
           </button>
         </div>
+        <Upload openedArea={this.state.openedArea} addFile={this.addFile} removeFile={this.removeFile}/>
       </div>
 
     );

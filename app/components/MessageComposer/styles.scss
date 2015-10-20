@@ -41,6 +41,69 @@
     background-color: $с-composer-sender_bg;
   }
 
+  &__open-upload-area {
+    position: relative;
+    left: 0;
+
+    display: block;
+
+    width: 24px;
+    height: 30px;
+    padding: 0;
+
+    cursor: pointer;
+
+    border: 0;
+    outline: none;
+    background: transparent;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      display: block;
+
+      content: '';
+      transition: background .3s;
+      transition: .5s ease-in-out;
+
+      background: $c-blue;
+    }
+
+    &::before {
+      width: 2px;
+      height: 18px;
+      margin-top: -9px;
+      margin-left: -1px;
+    }
+
+    &::after {
+      width: 18px;
+      height: 2px;
+      margin-top: -1px;
+      margin-left: -9px;
+    }
+
+    &:hover {
+      &::before,
+      &::after {
+        background: #fff;
+      }
+    }
+
+    &_open {
+      &::before {
+        transform: rotateZ(-135deg);
+      }
+
+      &::after {
+        transform: rotateZ(45deg);
+      }
+    }
+  }
+
   &__send-button {
     position: absolute;
     right: 3px;
