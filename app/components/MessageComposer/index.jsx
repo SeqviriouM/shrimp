@@ -47,7 +47,6 @@ export default class MessageComposer extends React.Component {
 
   sendMessage = () => {
     const text = this.state.text.trim();
-    debugger;
     if (text) {
       this.props.newMessage({
         channelId: this.props.local.get('currentChannelId'),
