@@ -9,6 +9,7 @@ export default class Messages extends React.Component {
 
   static propTypes = {
     messages: PropTypes.instanceOf(List).isRequired,
+    channels: PropTypes.instanceOf(List).isRequired,
     local: PropTypes.instanceOf(Map).isRequired,
     docked: PropTypes.bool.isRequired,
   }
@@ -53,7 +54,7 @@ export default class Messages extends React.Component {
 
 
   render() {
-    const {messages, local} = this.props;
+    const { messages, local, channels } = this.props;
     return (
       <div
         className='messages'
@@ -68,6 +69,7 @@ export default class Messages extends React.Component {
         <MessageComposer
           {...this.props}
           local={local}
+          channels={channels}
           changeBottom={this.changeBottom}
         />
       </div>

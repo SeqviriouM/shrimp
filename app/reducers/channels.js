@@ -54,6 +54,10 @@ export function channels(state = EMPTY_LIST, action = {type: 'DEFAULT'}) {
   case A.REMOVE_DIRTY_DIRECT_CHANNEL:
     return state.shift();
 
+  case A.TYPING:
+    const typingChannelIndex = state.findIndex(item => item.get('id') === action.payload.channelId);
+    return state.setIn([typingChannelIndex, 'typing'], action.payload.typingAction);
+
   default:
     return state;
   }
