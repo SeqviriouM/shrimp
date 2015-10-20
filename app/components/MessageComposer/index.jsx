@@ -20,7 +20,7 @@ export default class MessageComposer extends React.Component {
     this.state = {
       text: '',
       files: {},
-      openArea: false,
+      openedArea: false,
     };
   }
 
@@ -28,7 +28,7 @@ export default class MessageComposer extends React.Component {
     return !(
       Immutable.is(nextProps.local, this.props.local) &&
       Immutable.is(nextState.text, this.state.text) &&
-       Immutable.is(nextState.openArea, this.state.openArea)
+       Immutable.is(nextState.openedArea, this.state.openedArea)
     );
   }
 
@@ -70,7 +70,7 @@ export default class MessageComposer extends React.Component {
 
   openUploadArea = () => {
     this.setState({
-      openArea: !this.state.openArea,
+      openedArea: !this.state.openedArea,
     });
   }
 
@@ -106,7 +106,9 @@ export default class MessageComposer extends React.Component {
       <div className='composer'>
         <button
           onClick={this.openUploadArea}
-          className='add-channel-button'
+          className={cx('composer__open-upload-area', {
+            'composer__open-upload-area_open': this.state.openedArea,
+          })}
         ></button>
         <div className='composer__sender'>
           <Textarea
@@ -133,7 +135,7 @@ export default class MessageComposer extends React.Component {
           >Send
           </button>
         </div>
-        <Upload openArea={this.state.openArea} addFile={this.addFile} removeFile={this.removeFile}/>
+        <Upload openedArea={this.state.openedArea} addFile={this.addFile} removeFile={this.removeFile}/>
       </div>
 
     );

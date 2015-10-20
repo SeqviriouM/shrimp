@@ -7,7 +7,7 @@ import './dropzone.min.css';
 export default class Upload extends React.Component {
 
   static propTypes = {
-    openArea: PropTypes.bool,
+    openedArea: PropTypes.bool,
     addFile: PropTypes.func,
     removeFile: PropTypes.func,
   }
@@ -21,7 +21,7 @@ export default class Upload extends React.Component {
 
 
   componentConfig = {
-    iconFiletypes: ['.jpg', '.png', '.gif'],
+    iconFiletypes: ['.jpg', '.png', '.gif', '.pdf', '.doc', '.docx'],
     showFiletypeIcon: true,
     postUrl: '/upload',
   }
@@ -73,7 +73,7 @@ export default class Upload extends React.Component {
   render() {
     return (
       <div className={cx('upload-area', {
-        'upload-area_open': this.props.openArea,
+        'upload-area_open': this.props.openedArea,
       })}>
         <DropzoneComponent
           config={this.componentConfig}
