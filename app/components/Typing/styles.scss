@@ -60,7 +60,12 @@
 
 .typing {
   position: absolute;
+  top: -20px;
   left: 50%;
+
+  overflow: hidden;
+
+  height: 70px;
 
   &__dot {
     display: inline-block;

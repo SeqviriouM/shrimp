@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import Textarea from 'react-textarea-autosize';
 import Upload from 'components/Upload';
 import Typing from 'components/Typing';
+import {MOD} from '../../../constants';
 import './styles.scss';
 
 export default class MessageComposer extends React.Component {
@@ -46,7 +47,7 @@ export default class MessageComposer extends React.Component {
       channelId: this.props.local.get('currentChannelId'),
       typingAction: false,
     });
-  }, 1000);
+  }, MOD.TYPING_TIME);
 
 
   startTyping = () => {
