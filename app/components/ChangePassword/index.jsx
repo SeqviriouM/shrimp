@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import PopUp from 'components/PopUp';
 import Immutable, {Map, List} from 'immutable';
+import cx from 'classnames';
 import store from 'store';
-import {Link} from 'react-router';
 import {changeUserInfo} from 'actions/local';
-import Tabs from 'components/Tabs';
-import Tab from 'components/Tab';
+import InfoMessage from 'components/InfoMessage';
+import Input from 'components/Input';
+import Button from 'components/Button';
 import './styles.scss';
 
 
@@ -16,7 +16,7 @@ import './styles.scss';
   users: state.users,
 }))
 
-export default class Settings extends React.Component {
+export default class ChangePassword extends React.Component {
 
   static propTypes = {
     location: PropTypes.string.isRequired,
@@ -30,7 +30,7 @@ export default class Settings extends React.Component {
     this.state = {
       info: {
         type: 'info',
-        text: 'Edit your data',
+        text: 'Change your password',
       },
       shakeInfo: false,
       email: '',
@@ -137,15 +137,15 @@ export default class Settings extends React.Component {
     store.dispatch(changeUserInfo(changedData));
   }
 
-  emailChange = e => {
+  oldPasswordChange = e => {
     this.setState({
-      email: e.target.value,
-      showEmailError: false,
+      oldPassword: e.target.value,
+      showOldPasswordError: false,
     });
   }
 
 
-  nameChange = e => {
+  passwordChange = e => {
     this.setState({
       name: e.target.value,
       showNameError: false,
@@ -155,21 +155,44 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <div className='settings'>
-        <PopUp className='settings__window'>
-          <Tabs
-            className='settings__tabs'
-            currentTabId={this.state.currentTabId}
-            changeTab={this.changeTab}
-          >
-            <Tab id={1} link='/settings/profile'>Settings</Tab>
-            <Tab id={2} link='/settings/changepass'>Change password</Tab>
-          </Tabs>
-          {this.props.children}
-        </PopUp>
-        <Link to='/'>
-          <div className='settings__overlay' />
-        </Link>
+      <div className='change-password'>
+        <form
+          className='change-password__form'
+          onSubmit={this.changeInfo}
+        >
+          <InfoMessage
+            className='change-password__info-message'
+            type={this.state.info.type}
+            shake={this.state.shakeInfo}
+          >{this.state.info.text}</InfoMessage>
+          <Input
+            className={cx('change-password__input', {
+              'input_type_error': this.state.showOldPasswordError,
+            })}
+            name='old-password'
+            placeholder='Old password'
+            onChange={this.oldPasswordChange}
+          />
+          <Input
+            className={cx('change-password__input', {
+              'input_type_error': this.state.showPasswordError,
+            })}
+            name='password'
+            placeholder='New password'
+            onChange={this.passwordChange}
+          />
+          <Input
+            className={cx('change-password__input', {
+              'input_type_error': this.state.showPasswordError,
+            })}
+            placeholder='Repeat new password'
+          />
+          <Button
+            className='change-password__submit-button'
+            type='submit'
+            inProgress={this.state.inProgress}
+          >{this.state.inProgress ? 'Saving' : 'Save'}</Button>
+        </form>
       </div>
     );
   }

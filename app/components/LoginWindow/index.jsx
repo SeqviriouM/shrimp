@@ -17,27 +17,6 @@ export default class LoginWindow extends React.Component {
     location: PropTypes.string.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentTabId: (path => {
-        if (path === '/signup') {
-          return 2;
-        } else if (path === '/login') {
-          return 1;
-        }
-        return 1;
-      }(this.props.location)),
-    };
-  }
-
-
-  changeTab = (tabId) => {
-    this.setState({
-      currentTabId: tabId,
-    });
-  }
-
 
   render() {
     return (
@@ -46,8 +25,6 @@ export default class LoginWindow extends React.Component {
       >
         <Tabs
           className='login-window__tabs'
-          currentTabId={this.state.currentTabId}
-          changeTab={this.changeTab}
         >
           <Tab id={1} link='/login'>Log In</Tab>
           <Tab id={2} link='/signup'>Sign Up</Tab>

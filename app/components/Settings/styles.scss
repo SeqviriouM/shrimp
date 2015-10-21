@@ -1,20 +1,6 @@
 @import '~styles/variables.scss';
 
 .settings {
-  &__form {
-    padding: 40px 75px;
-  }
-  &__info-message {
-    margin-bottom: 10px;
-
-    font-size: .9em;
-  }
-  &__input {
-    margin-top: 10px;
-  }
-  &__submit-button {
-    margin-top: 20px;
-  }
   &__tabs {
     border-bottom: solid 1px $c-login-window_border;
 
