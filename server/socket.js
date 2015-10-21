@@ -82,7 +82,7 @@ export default function startSocketServer(http) {
 
 
     socket.on(CS.TYPING, data => {
-      io.to(data.channelId).emit(SC.TYPING, {
+      socket.broadcast.to(data.channelId).emit(SC.TYPING, {
         channelId: data.channelId,
         typingAction: data.typingAction,
       });

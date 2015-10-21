@@ -33,7 +33,7 @@ export default class Typing extends React.Component {
         })}>
           <Motion
             defaultStyle={{y: spring(-100)}}
-            style={{y: spring(this.prosp.isTyping ? 0 : -100, [1000, 100])}}
+            style={{y: spring(this.props.isTyping ? 0 : 100, [100, 14])}}
           >
             {(interpolated) => getContent(interpolated)}
           </Motion>
