@@ -1,0 +1,93 @@
+@import '~styles/variables.scss';
+@import '~styles/colors.scss';
+
+@-webkit-keyframes dots-loader__animation-one {
+  0% {
+    opacity: 1;
+  }
+  33% {
+    opacity: .25;
+  }
+  66% {
+    opacity: .25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes dots-loader__animation-one {
+  0% {
+    opacity: 1;
+  }
+  33% {
+    opacity: .25;
+  }
+  66% {
+    opacity: .25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@-webkit-keyframes dots-loader__animation-two {
+  0% {
+    opacity: .25;
+  }
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: .25;
+  }
+}
+
+
+@keyframes dots-loader__animation-two {
+  0% {
+    opacity: .25;
+  }
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: .25;
+  }
+}
+
+.typing {
+  position: absolute;
+  left: 50%;
+
+  &__dot {
+    display: inline-block;
+
+    width: 6px;
+    height: 6px;
+    margin: 0 5px;
+
+    border-radius: 3px;
+    background: #fff;
+
+    &_one {
+      animation: dots-loader__animation-one 1s infinite linear;
+
+      opacity: 1;
+    }
+
+    &_two {
+      animation: dots-loader__animation-two 1s infinite linear;
+
+      opacity: .25;
+    }
+
+    &_three {
+      animation: dots-loader__animation-two 1s infinite linear;
+
+      opacity: .25;
+    }
+  }
+}

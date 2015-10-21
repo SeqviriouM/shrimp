@@ -31,8 +31,9 @@ export default class Messages extends React.Component {
     return !(
       Immutable.is(nextProps.messages, this.props.messages) &&
       Immutable.is(nextProps.local, this.props.local) &&
-        nextProps.docked === this.props.docked &&
-        nextState.listBottom === this.state.listBottom
+      Immutable.is(nextProps.channels, this.props.channels) &&
+      nextProps.docked === this.props.docked &&
+      nextState.listBottom === this.state.listBottom
     );
   }
 

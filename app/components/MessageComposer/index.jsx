@@ -4,6 +4,7 @@ import cx from 'classnames';
 import debounce from 'lodash.debounce';
 import Textarea from 'react-textarea-autosize';
 import Upload from 'components/Upload';
+import Typing from 'components/Typing';
 import './styles.scss';
 
 export default class MessageComposer extends React.Component {
@@ -133,15 +134,13 @@ export default class MessageComposer extends React.Component {
   render() {
     const {changeBottom, channels} = this.props;
     const currentChannel = channels.find(item => item.get('id') === this.props.local.get('currentChannelId'));
-    const typingAction = currentChannel.get('typing');
+    const isTyping = currentChannel.get('typing');
 
     const leftSymbols = this.messageMaxLength - this.state.text.length;
 
     return (
       <div className='composer'>
-        <div>
-          {typingAction}
-        </div>
+        <Typing isTyping={isTyping} />
         <button
           onClick={this.openUploadArea}
           className={cx('composer__open-upload-area', {

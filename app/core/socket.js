@@ -63,6 +63,7 @@ export function socketClient(type = null, socketData) {
 
 
     socket.on(SC.TYPING, (data) => {
+      console.log(data);
       store.dispatch(typing(data));
     });
 
