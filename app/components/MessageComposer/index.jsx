@@ -134,7 +134,7 @@ export default class MessageComposer extends React.Component {
   render() {
     const {changeBottom, channels} = this.props;
     const currentChannel = channels.find(item => item.get('id') === this.props.local.get('currentChannelId'));
-    const isTyping = currentChannel.get('typing');
+    const isTyping = currentChannel ? currentChannel.get('typing') : false;
 
     const leftSymbols = this.messageMaxLength - this.state.text.length;
 

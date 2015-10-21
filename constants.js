@@ -46,8 +46,14 @@ const A = {
   CHANGE_MESSAGE_FILTER_VALUE: 'CHANGE_MESSAGE_FILTER_VALUE',
 };
 
+const MOD = {
+  MAX_MESSAGE_LENGTH: 220,
+  TYPING_TIME: 2000,
+};
+
 module.exports = {
   SC: SC,
   CS: CS,
   A: A,
+  MOD: MOD,
 };

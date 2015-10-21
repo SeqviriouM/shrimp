@@ -1,7 +1,7 @@
 @import '~styles/variables.scss';
 @import '~styles/colors.scss';
 
-@-webkit-keyframes dots-loader__animation-one {
+@-webkit-keyframes dots-loader__animation-type-one {
   0% {
     opacity: 1;
   }
@@ -17,7 +17,7 @@
 }
 
 
-@keyframes dots-loader__animation-one {
+@keyframes dots-loader__animation-type-one {
   0% {
     opacity: 1;
   }
@@ -33,7 +33,7 @@
 }
 
 
-@-webkit-keyframes dots-loader__animation-two {
+@-webkit-keyframes dots-loader__animation-type-two {
   0% {
     opacity: .25;
   }
@@ -46,7 +46,7 @@
 }
 
 
-@keyframes dots-loader__animation-two {
+@keyframes dots-loader__animation-type-two {
   0% {
     opacity: .25;
   }
@@ -72,20 +72,20 @@
     border-radius: 3px;
     background: #fff;
 
-    &_one {
-      animation: dots-loader__animation-one 1s infinite linear;
+    &_0 {
+      animation: dots-loader__animation-type-one 1s infinite linear;
 
       opacity: 1;
     }
 
-    &_two {
-      animation: dots-loader__animation-two 1s infinite linear;
+    &_1 {
+      animation: dots-loader__animation-type-two 1s infinite linear;
 
       opacity: .25;
     }
 
-    &_three {
-      animation: dots-loader__animation-two 1s infinite linear;
+    &_2 {
+      animation: dots-loader__animation-type-two 1s infinite linear;
 
       opacity: .25;
     }
