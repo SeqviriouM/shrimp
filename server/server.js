@@ -5,10 +5,11 @@ import multer from 'multer';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import startSocketServer from './socket.js';
 import getConfig from './config.js';
 import {createDefaultChannel} from './fill-db.js';
-import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId} from './db/db_core.js';
+import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword} from './db/db_core.js';
 import getInitState from './initial-state';
 import {generateSessionId} from './lib/core.js';
 // const debug = require('debug')('shrimp:server');
@@ -43,6 +44,7 @@ if (isDev && isDebug && process.env.DEBUG.indexOf('shrimp:front') === 0) {
 }
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(multer({ dest: 'uploads/' }).single('file'));
 
@@ -101,9 +103,16 @@ app.post('/checkemailexist', (req, res) => {
 app.post('/changepass', (req, res) => {
   const oldPassword = req.body.oldPassword;
   const password = req.body.password;
-  res.json({
-    oldPassword,
-    password,
+  checkOldPassword(req.cookies.sessionId, oldPassword, (passwordCheck) => {
+    if (passwordCheck.status.type === 'success') {
+      changePassword(passwordCheck.user, password, (status) => {
+        res.json({ status });
+      });
+    } else {
+      res.json({
+        status: passwordCheck.status,
+      });
+    }
   });
 });
 

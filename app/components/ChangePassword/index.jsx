@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Immutable, {Map, List} from 'immutable';
+import store from 'store';
 import cx from 'classnames';
 import InfoMessage from 'components/InfoMessage';
 import PasswordInput from 'components/PasswordInput';
@@ -16,7 +17,6 @@ import './styles.scss';
 export default class ChangePassword extends React.Component {
 
   static propTypes = {
-    location: PropTypes.string.isRequired,
     users: PropTypes.instanceOf(List).isRequired,
     local: PropTypes.instanceOf(Map).isRequired,
     children: PropTypes.node,
@@ -105,18 +105,40 @@ export default class ChangePassword extends React.Component {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(changedData),
     }).then((res) => {
       if (res.status === 200) {
         res.json().then(data => {
-          debugger;
-          console.log(data);
+          if (data.status.type === 'success') {
+            this.setState({
+              inProgress: false,
+            });
+            store.history.pushState(null, '/');
+          } else {
+            if (data.status.error) {
+              this.setState({
+                info: {
+                  type: 'error',
+                  text: 'Error',
+                },
+                inProgress: false,
+              });
+            } else {
+              this.setState({
+                info: {
+                  type: 'error',
+                  text: data.status.text,
+                },
+                inProgress: false,
+              });
+            }
+          }
         });
       } else {
         return;
       }
     });
-    // store.dispatch(changeUserInfo(changedData));
   }
 
   oldPasswordChange = e => {
