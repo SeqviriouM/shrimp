@@ -1,16 +1,21 @@
 import React, {PropTypes} from 'react';
-import Immutable, {Map} from 'immutable';
+import Immutable, {Map, List} from 'immutable';
 import cx from 'classnames';
+import debounce from 'lodash.debounce';
 import Textarea from 'react-textarea-autosize';
 import Upload from 'components/Upload';
+import Typing from 'components/Typing';
+import {MOD} from '../../../constants';
 import './styles.scss';
 
 export default class MessageComposer extends React.Component {
 
   static propTypes = {
     local: PropTypes.instanceOf(Map).isRequired,
+    channels: PropTypes.instanceOf(List).isRequired,
     newMessage: PropTypes.func.isRequired,
     changeBottom: PropTypes.func.isRequired,
+    sendTypingAction: PropTypes.func,
   }
 
 
@@ -21,18 +26,48 @@ export default class MessageComposer extends React.Component {
       text: '',
       files: {},
       openedArea: false,
+      typing: false,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !(
       Immutable.is(nextProps.local, this.props.local) &&
+      Immutable.is(nextProps.channels, this.props.channels) &&
       Immutable.is(nextState.text, this.state.text) &&
-       Immutable.is(nextState.openedArea, this.state.openedArea)
+      Immutable.is(nextState.openedArea, this.state.openedArea)
     );
   }
 
+  stopTyping = debounce(() => {
+    this.setState({
+      typing: false,
+    });
+    this.props.sendTypingAction({
+      channelId: this.props.local.get('currentChannelId'),
+      typingAction: false,
+    });
+  }, MOD.TYPING_TIME);
+
+
+  startTyping = () => {
+    if (!this.state.typing) {
+      this.setState({
+        typing: true,
+      });
+      this.props.sendTypingAction({
+        channelId: this.props.local.get('currentChannelId'),
+        typingAction: true,
+      });
+    }
+  }
+
+
   textChange = (e) => {
+    this.startTyping();
+    this.stopTyping();
+
+
     if (e.target.value.length === this.messageMaxLength) {
       this.setState({
         text: e.target.value,
@@ -98,11 +133,15 @@ export default class MessageComposer extends React.Component {
   }
 
   render() {
-    const {changeBottom} = this.props;
+    const {changeBottom, channels} = this.props;
+    const currentChannel = channels.find(item => item.get('id') === this.props.local.get('currentChannelId'));
+    const isTyping = currentChannel ? currentChannel.get('typing') : false;
+
     const leftSymbols = this.messageMaxLength - this.state.text.length;
 
     return (
       <div className='composer'>
+        <Typing isTyping={isTyping} />
         <button
           onClick={this.openUploadArea}
           className={cx('composer__open-upload-area', {

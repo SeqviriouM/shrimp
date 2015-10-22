@@ -76,13 +76,16 @@ export default function startSocketServer(http) {
     });
 
 
-    socket.on(CS.TYPING, data => {
-      io.socket.emit(SC.TYPING, {channelId: data.id, typing: true});
+    socket.on(CS.SET_FAVORITE_CHANNEL, data => {
+      setFavoriteChannel(socket.sessionId, data);
     });
 
 
-    socket.on(CS.SET_FAVORITE_CHANNEL, data => {
-      setFavoriteChannel(socket.sessionId, data);
+    socket.on(CS.TYPING, data => {
+      socket.broadcast.to(data.channelId).emit(SC.TYPING, {
+        channelId: data.channelId,
+        typingAction: data.typingAction,
+      });
     });
 
 
@@ -99,6 +102,7 @@ export default function startSocketServer(http) {
         Channel.markAsRead(data, user.id);
       });
     });
+
 
     function findClientsSocket(roomId, namespace) {
       const res = [];
@@ -118,6 +122,7 @@ export default function startSocketServer(http) {
       return res;
     }
 
+
     socket.on(CS.ADD_DIRECT_CHANNEL, data => {
       Channel.addDirectChannel(data, (err, result) => {
         const channelId = result._id;
@@ -132,3 +137,4 @@ export default function startSocketServer(http) {
     });
   });
 }
+

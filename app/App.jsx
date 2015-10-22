@@ -117,6 +117,7 @@ export default class Application extends React.Component {
             <Messages
               docked={this.state.sidebarDocked}
               messages={messages}
+              channels={channels}
               local={local}
               {...actions}
             />

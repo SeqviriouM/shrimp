@@ -81,6 +81,7 @@ export function removeDirtyChannel() {
   };
 }
 
+
 export function addDirtyDirectChannel(channelName) {
   return {
     type: A.ADD_DIRTY_DIRECT_CHANNEL,
@@ -88,16 +89,35 @@ export function addDirtyDirectChannel(channelName) {
   };
 }
 
+
 export function removeDirtyDirectChannel() {
   return {
     type: A.REMOVE_DIRTY_DIRECT_CHANNEL,
   };
 }
 
+
 export function addDirectChannel(data) {
   return {
     type: CS.ADD_DIRECT_CHANNEL,
     payload: data,
     send: true,
+  };
+}
+
+
+export function sendTypingAction(data) {
+  return {
+    type: CS.TYPING,
+    payload: data,
+    send: true,
+  };
+}
+
+
+export function typing(data) {
+  return {
+    type: A.TYPING,
+    payload: data,
   };
 }

@@ -9,6 +9,7 @@ export default class Messages extends React.Component {
 
   static propTypes = {
     messages: PropTypes.instanceOf(List).isRequired,
+    channels: PropTypes.instanceOf(List).isRequired,
     local: PropTypes.instanceOf(Map).isRequired,
     docked: PropTypes.bool.isRequired,
   }
@@ -30,8 +31,9 @@ export default class Messages extends React.Component {
     return !(
       Immutable.is(nextProps.messages, this.props.messages) &&
       Immutable.is(nextProps.local, this.props.local) &&
-        nextProps.docked === this.props.docked &&
-        nextState.listBottom === this.state.listBottom
+      Immutable.is(nextProps.channels, this.props.channels) &&
+      nextProps.docked === this.props.docked &&
+      nextState.listBottom === this.state.listBottom
     );
   }
 
@@ -53,7 +55,7 @@ export default class Messages extends React.Component {
 
 
   render() {
-    const {messages, local} = this.props;
+    const { messages, local, channels } = this.props;
     return (
       <div
         className='messages'
@@ -68,6 +70,7 @@ export default class Messages extends React.Component {
         <MessageComposer
           {...this.props}
           local={local}
+          channels={channels}
           changeBottom={this.changeBottom}
         />
       </div>

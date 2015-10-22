@@ -5,13 +5,13 @@ import Immutable, {Map} from 'immutable';
 import cookies from 'browser-cookies';
 import cx from 'classnames';
 import DocumentTitle from 'react-document-title';
+import throttle from 'lodash.throttle';
 import {init, initUser} from 'actions/local';
 import InfoMessage from 'components/InfoMessage';
 import PasswordInput from 'components/PasswordInput';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import './styles.scss';
-import throttle from 'lodash.throttle';
 
 @connect(state => ({
   local: state.local,
