@@ -98,6 +98,15 @@ app.post('/checkemailexist', (req, res) => {
   });
 });
 
+app.post('/changepass', (req, res) => {
+  const oldPassword = req.body.oldPassword;
+  const password = req.body.password;
+  res.json({
+    oldPassword,
+    password,
+  });
+});
+
 app.post('/upload', (req, res) => {
   res.json(req.file);
 });

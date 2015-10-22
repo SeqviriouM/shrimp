@@ -173,3 +173,7 @@ export function loadChannelHistory(channelId, callback) {
     callback(messages);
   });
 }
+
+export function changePassword() {
+  return true;
+}
