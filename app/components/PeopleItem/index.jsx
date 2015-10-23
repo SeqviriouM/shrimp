@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Immutable, {Map} from 'immutable';
 import cx from 'classnames';
+import {Link} from 'react-router';
 import UnreadCounter from 'components/UnreadCounter';
 import './styles.scss';
 
@@ -51,14 +52,26 @@ export default class PeopleItem extends React.Component {
         })}
         onClick={this.setChannel}
       >
-        <div className='person__name'>{item.get('name')}</div>
-        <div className='person__last-message'>
-          {lastMessage ? lastMessage.get('text') : '🙊'}
+        <div className='person__avatar'>
+          <Link to={`/user/${item.get('id')}`}>
+            <img
+              className='message__avatar'
+              src={item.get('avatar')}
+              width='50'
+              height='50'
+            />
+          </Link>
         </div>
-        <UnreadCounter
-          className='person__unread-counter'
-          count={unreadCount}
-        />
+        <div>
+          <div className='person__name'>{item.get('name')}</div>
+          <div className='person__last-message'>
+            {lastMessage ? lastMessage.get('text') : '🙊'}
+          </div>
+          <UnreadCounter
+            className='person__unread-counter'
+            count={unreadCount}
+          />
+        </div>
       </div>
     );
   }

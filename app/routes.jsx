@@ -7,6 +7,7 @@ import SignUp from 'components/SignUp';
 import Settings from 'components/Settings';
 import Profile from 'components/Profile';
 import ChangePassword from 'components/ChangePassword';
+import UserInfo from 'components/UserInfo';
 
 
 export default (
@@ -16,6 +17,7 @@ export default (
         <Route path='profile' component={Profile} />
         <Route path='changepass' component={ChangePassword} />
       </Route>
+      <Route path='user/:userId' component={UserInfo} />
     </Route>
     <Route path='/' component={LoginPage}>
       <Route path='login' component={Login} />
