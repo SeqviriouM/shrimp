@@ -1,7 +1,12 @@
 import React, {PropTypes, cloneElement} from 'react';
+import {pushState} from 'redux-router';
+import {connect} from 'react-redux';
 import cx from 'classnames';
 import './styles.scss';
 
+@connect(state => ({
+  location: state.router.location.pathname,
+}), {pushState})
 export default class Tabs extends React.Component {
 
   static propTypes = {
@@ -9,11 +14,32 @@ export default class Tabs extends React.Component {
     changeTab: PropTypes.func,
     className: PropTypes.string,
     children: PropTypes.node.isRequired,
+    location: PropTypes.string.isRequired,
   }
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.currentTabId !== this.props.currentTabId;
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentTabId: (path => {
+        const tabIndex = this.props.children.findIndex(tabElement => tabElement.props.link === path);
+        return tabIndex > -1 ? (tabIndex + 1) : 1;
+      }(this.props.location)),
+    };
   }
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !(nextState.currentTabId !== this.state.currentTabId &&
+      nextProps.currentTabId !== this.props.currentTabId);
+  }
+
+
+  changeTab = (tabId) => {
+    this.setState({
+      currentTabId: tabId,
+    });
+  }
+
 
   render() {
     const {className, currentTabId, changeTab} = this.props;
@@ -23,10 +49,10 @@ export default class Tabs extends React.Component {
     const getChildren = () => {
       return children.map((tabElement, i) => {
         return cloneElement(tabElement, {
-          isCurrent: currentTabId === tabElement.props.id,
+          isCurrent: (currentTabId || this.state.currentTabId) === tabElement.props.id,
           width: tabWidth,
           key: i,
-          changeTab,
+          changeTab: changeTab || this.changeTab,
         });
       });
     };

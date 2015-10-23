@@ -173,3 +173,55 @@ export function loadChannelHistory(channelId, callback) {
     callback(messages);
   });
 }
+
+
+export function checkOldPassword(sessionId, password, callback) {
+  User.findOne({ sessionId }, ).select({ passwordHash: 1 }).exec((err, user) => {
+    if (err) {
+      debug(err);
+      const passwordCheck = {
+        sattus: {
+          type: 'error',
+          error: err,
+        },
+      };
+      callback(passwordCheck);
+    } else if (user && (user.passwordHash === hashPassword(password))) {
+      const passwordCheck = {
+        status: {
+          type: 'success',
+        },
+        user,
+      };
+      callback(passwordCheck);
+    } else {
+      const passwordCheck = {
+        status: {
+          type: 'error',
+          text: 'Old password does not match',
+        },
+      };
+      callback(passwordCheck);
+    }
+  });
+}
+
+export function changePassword(user, password, callback) {
+  user.passwordHash = hashPassword(password);
+  user.save((error) => {
+    if (error) {
+      debug(error);
+      const status = {
+        type: 'error',
+        error,
+      };
+      callback(status);
+    } else {
+      const status = {
+        type: 'success',
+        text: 'Password has successfully changed',
+      };
+      callback(status);
+    }
+  });
+}
