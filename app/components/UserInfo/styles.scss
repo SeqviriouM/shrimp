@@ -1,6 +1,6 @@
 @import '~styles/variables.scss';
 
-.settings {
+.user-details {
   &__tabs {
     border-bottom: solid 1px $c-login-window_border;
 
@@ -39,22 +39,19 @@
 
     background: rgba(0, 0, 0, .7);
   }
-}
 
-
-.profile {
-  &__form {
-    padding: 40px 75px;
-  }
-  &__info-message {
-    margin-bottom: 10px;
-
-    font-size: .9em;
-  }
-  &__input {
-    margin-top: 10px;
-  }
-  &__submit-button {
-    margin-top: 20px;
+  .user-info {
+    &__form {
+      padding: 40px 75px;
+    }
+    &__avatar-area {
+      text-align: center;
+      .user-info__avatar {
+        position: relative;
+      }
+    }
+    &__input {
+      margin-top: 10px;
+    }
   }
 }

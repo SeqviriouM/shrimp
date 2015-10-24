@@ -57,12 +57,12 @@ export default class PeopleItem extends React.Component {
             <img
               className='message__avatar'
               src={item.get('avatar')}
-              width='50'
-              height='50'
+              width='30'
+              height='30'
             />
           </Link>
         </div>
-        <div>
+        <div className='person__info'>
           <div className='person__name'>{item.get('name')}</div>
           <div className='person__last-message'>
             {lastMessage ? lastMessage.get('text') : '🙊'}
