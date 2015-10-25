@@ -3,6 +3,7 @@ import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 import cookies from 'browser-cookies';
 import Sidebar from 'react-sidebar';
+import NotificationSystem from 'react-notification-system';
 import store from 'store';
 import {socketClient} from 'core/socket';
 import Messages from 'components/Messages';
@@ -57,13 +58,18 @@ export default class Application extends React.Component {
     if (!cookieSessionId) {
       store.history.pushState(null, '/login');
     } else {
-      socketClient('SOCKET_INIT');
+      socketClient('SOCKET_INIT', null, this._addNotification);
       store.dispatch(actionsLocal.getInitData());
     }
 
     const mql = window.matchMedia('(min-width: 800px)');
     mql.addListener(this.mediaQueryChanged);
     this.setState({mql: mql, sidebarDocked: mql.matches, sidebarOpen: mql.matches});
+  }
+
+
+  componentDidMount = () => {
+    this._notificationSystem = this.refs.notificationSystem;
   }
 
 
@@ -79,6 +85,15 @@ export default class Application extends React.Component {
 
   mediaQueryChanged = () => {
     this.setState({sidebarDocked: this.state.mql.matches, sidebarOpen: this.state.mql.matches});
+  }
+
+  _addNotification = (notify) => {
+    if (notify) {
+      this._notificationSystem.addNotification({
+        message: 'Notification message',
+        level: 'success',
+      });
+    }
   }
 
 
@@ -100,6 +115,7 @@ export default class Application extends React.Component {
     return (
       <DocumentTitle title='Chat' >
         <div className='chat-page'>
+          <NotificationSystem ref='notificationSystem' />
           {this.props.children}
           <Header
             setOpen={this.onSetSidebarOpen}

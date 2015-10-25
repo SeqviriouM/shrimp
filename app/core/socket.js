@@ -8,7 +8,7 @@ import {init, initUser, logOut} from '../actions/local';
 import {SC} from '../../constants';
 
 
-export function socketClient(type = null, socketData) {
+export function socketClient(type = null, socketData, notifyCallback) {
   const socket = io();
 
   if (type === 'SOCKET_INIT') {
@@ -43,6 +43,7 @@ export function socketClient(type = null, socketData) {
 
 
     socket.on(SC.CHANGE_USER_INFO, (data) => {
+      notifyCallback(true);
       store.dispatch(setUserInfo(data));
     });
 
