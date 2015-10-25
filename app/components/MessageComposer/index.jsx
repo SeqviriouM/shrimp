@@ -24,7 +24,7 @@ export default class MessageComposer extends React.Component {
     this.messageMaxLength = 220;
     this.state = {
       text: '',
-      files: {},
+      files: new Map(),
       openedArea: false,
       typing: false,
     };
@@ -82,11 +82,12 @@ export default class MessageComposer extends React.Component {
 
   sendMessage = () => {
     const text = this.state.text.trim();
-    if (text) {
+    if (text || this.state.files.size > 0) {
       this.props.newMessage({
         channelId: this.props.local.get('currentChannelId'),
         senderId: this.props.local.get('userId'),
         text: this.state.text,
+        files: this.state.files.toJS(),
       });
       this.setState({
         text: '',
@@ -109,9 +110,8 @@ export default class MessageComposer extends React.Component {
   }
 
   addFile = (file, response) => {
-    this.state.files[file.name] = response.path;
     this.setState({
-      files: this.state.files,
+      files: this.state.files.set(file.name, response.path),
     });
   }
 
@@ -126,8 +126,18 @@ export default class MessageComposer extends React.Component {
         },
         body: JSON.stringify({
           fileName: file.name,
-          filePath: this.state.files[file.name],
+          filePath: this.state.files.get(file.name),
         }),
+      }).then((res) => {
+        if (res.status === 200) {
+          res.json().then(data => {
+            this.setState({
+              files: this.state.files.delete(data.fileName),
+            });
+          });
+        } else {
+          return;
+        }
       });
     }
   }

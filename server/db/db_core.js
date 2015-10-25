@@ -4,11 +4,13 @@ import crypto from 'crypto';
 import getUserModel from '../models/user';
 import getChannelModel from '../models/channel';
 import getMessageModel from '../models/message';
+import getFileModel from '../models/file';
 
 const ObjectId = mongoose.Types.ObjectId;
 const Channel = getChannelModel();
 const User = getUserModel();
 const Message = getMessageModel();
+const File = getFileModel();
 const debug = require('debug')('shrimp:server');
 const salt = 'pepper';
 
@@ -223,5 +225,13 @@ export function changePassword(user, password, callback) {
       };
       callback(status);
     }
+  });
+}
+
+
+export function saveFile(file, callback) {
+  new File(file).save((err) => {
+    if (err) debug(err);
+    callback();
   });
 }

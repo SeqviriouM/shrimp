@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import startSocketServer from './socket.js';
 import getConfig from './config.js';
 import {createDefaultChannel} from './fill-db.js';
-import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword} from './db/db_core.js';
+import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword, saveFile} from './db/db_core.js';
 import getInitState from './initial-state';
 import {generateSessionId} from './lib/core.js';
 // const debug = require('debug')('shrimp:server');
@@ -117,12 +117,23 @@ app.post('/changepass', (req, res) => {
 });
 
 app.post('/upload', (req, res) => {
-  res.json(req.file);
+  const savedFile = {
+    fileName: req.file.filename,
+    filePath: req.file.path,
+    originalName: req.file.originalname,
+    user: req.cookies.sessionId,
+  };
+  saveFile(savedFile, () => {
+    console.log('Uploaded');
+    res.json(req.file);
+  });
 });
 
 app.delete('/remove-file', (req, res) => {
   fs.unlink(req.body.filePath, () => {
-    res.sendStatus(200);
+    res.json({
+      fileName: req.body.fileName,
+    });
   });
 });
 
