@@ -26,7 +26,6 @@ export function socketClient(type = null, socketData, notifyCallback) {
 
 
     socket.on(SC.ADD_CHANNEL, (data) => {
-      debugger;
       checkNotify(data, notifyCallback);
       store.dispatch(addChannel(Map({id: data.id, name: data.name, joined: false})));
     });
