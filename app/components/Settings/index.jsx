@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import PopUp from 'components/PopUp';
 import Immutable, {Map, List} from 'immutable';
 import store from 'store';
 import {Link} from 'react-router';
 import {changeUserInfo} from 'actions/local';
+import PopUp from 'components/PopUp';
 import Tabs from 'components/Tabs';
 import Tab from 'components/Tab';
 import './styles.scss';

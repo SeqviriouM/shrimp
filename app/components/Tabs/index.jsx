@@ -20,7 +20,7 @@ export default class Tabs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTabId: (path => {
+      currentTabId: this.props.currentTabId || (path => {
         const tabIndex = this.props.children.findIndex(tabElement => tabElement.props.link === path);
         return tabIndex > -1 ? (tabIndex + 1) : 1;
       }(this.props.location)),

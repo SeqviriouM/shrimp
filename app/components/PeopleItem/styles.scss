@@ -48,35 +48,63 @@
     left: 10px;
   }
 
-  &__name {
-    padding-top: 5px;
-    padding-left: 25px;
+  &__avatar {
+    img {
+      top: 5px;
+      left: -50px;
+
+      transition: left .5s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
   }
 
+  &__info {
+    transition: padding .5s ease;
 
-  &__last-message {
-    $font-size: 12px;
-    $line-height: 1.2;
-    $lines-to-show: 2;
+    .person__name {
+      padding-top: 5px;
+      padding-left: 25px;
+    }
 
-    display: block; /* Fallback for non-webkit */
-    display: -webkit-box;
-    overflow: hidden;
 
-    max-width: 400px;
-    height: $font-size * $line-height * $lines-to-show; /* Fallback for non-webkit */
-    padding-right: 30px;
-    padding-left: 20px;
+    .person__last-message {
+      $font-size: 12px;
+      $line-height: 1.2;
+      $lines-to-show: 2;
 
-    text-overflow: ellipsis;
+      display: block; /* Fallback for non-webkit */
+      display: -webkit-box;
+      overflow: hidden;
 
-    color: $c-gray-65;
+      max-width: 400px;
+      height: $font-size * $line-height * $lines-to-show; /* Fallback for non-webkit */
+      padding-right: 30px;
+      padding-left: 20px;
 
-    font-size: $font-size;
-    font-weight: bolder;
-    line-height: $line-height;
+      text-overflow: ellipsis;
 
-    -webkit-line-clamp: $lines-to-show;
-    -webkit-box-orient: vertical;
+      color: $c-gray-65;
+
+      font-size: $font-size;
+      font-weight: bolder;
+      line-height: $line-height;
+
+      -webkit-line-clamp: $lines-to-show;
+      -webkit-box-orient: vertical;
+    }
+  }
+
+  &:hover {
+    .person__avatar {
+      img {
+        left: 10px;
+      }
+    }
+    .person__info {
+      padding-left: 30px;
+    }
   }
 }
