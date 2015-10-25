@@ -138,12 +138,12 @@ export function joinToChannel(sessionId, channelId, callback) {
           channel.users.push({ _id: user._id, lastSeen: Date.now() });
           channel.save(error => {
             if (error) reject(error);
-            resolve({userId: user._id});
+            resolve({userId: user._id, userName: user.name, channelName: channel.name});
           });
         });
     });
-  }).then(({userId}) => {
-    callback(userId, channelId);
+  }).then(({userId, userName, channelName}) => {
+    callback(userId, userName, channelName);
   }).catch(exception => { debug(exception); });
 }
 

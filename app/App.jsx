@@ -58,7 +58,7 @@ export default class Application extends React.Component {
     if (!cookieSessionId) {
       store.history.pushState(null, '/login');
     } else {
-      socketClient('SOCKET_INIT', null, this._addNotification);
+      socketClient('SOCKET_INIT', null, this.addNotification);
       store.dispatch(actionsLocal.getInitData());
     }
 
@@ -69,7 +69,7 @@ export default class Application extends React.Component {
 
 
   componentDidMount = () => {
-    this._notificationSystem = this.refs.notificationSystem;
+    this.notificationSystem = this.refs.notificationSystem;
   }
 
 
@@ -87,11 +87,11 @@ export default class Application extends React.Component {
     this.setState({sidebarDocked: this.state.mql.matches, sidebarOpen: this.state.mql.matches});
   }
 
-  _addNotification = (notify) => {
+  addNotification = (notify) => {
     if (notify) {
-      this._notificationSystem.addNotification({
-        message: 'Notification message',
-        level: 'success',
+      this.notificationSystem.addNotification({
+        message: notify.message,
+        level: notify.level,
       });
     }
   }

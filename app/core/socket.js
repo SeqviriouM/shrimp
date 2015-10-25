@@ -8,52 +8,73 @@ import {init, initUser, logOut} from '../actions/local';
 import {SC} from '../../constants';
 
 
+const checkNotify = (data, notifyCallback) => {
+  if (data.notify) {
+    notifyCallback(data.notifyData);
+  }
+};
+
+
 export function socketClient(type = null, socketData, notifyCallback) {
   const socket = io();
 
   if (type === 'SOCKET_INIT') {
     socket.on(SC.ADD_MESSAGE, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(addMessage(Map(data)));
     });
 
 
     socket.on(SC.ADD_CHANNEL, (data) => {
+      debugger;
+      checkNotify(data, notifyCallback);
       store.dispatch(addChannel(Map({id: data.id, name: data.name, joined: false})));
     });
 
 
     socket.on(SC.JOIN_USER, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(joinUser(data));
     });
 
 
     socket.on(SC.INIT, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(init(data));
     });
 
 
     socket.on(SC.SIGN_IN, (data) => {
+      checkNotify(data);
       store.dispatch(initUser(data));
     });
 
 
     socket.on(SC.JOIN_TO_CHANNEL, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(addUserToChannel(data));
     });
 
 
+    socket.on(SC.NEW_USER_JOINED_TO_CHANNEL, (data) => {
+      checkNotify(data, notifyCallback);
+    });
+
+
     socket.on(SC.CHANGE_USER_INFO, (data) => {
-      notifyCallback(true);
+      checkNotify(data, notifyCallback);
       store.dispatch(setUserInfo(data));
     });
 
 
     socket.on(SC.SET_CHANNEL_HISTORY, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(loadChannelHistory(data));
     });
 
 
     socket.on(SC.ADD_DIRECT_CHANNEL, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(addChannel(Map({
         id: data.id,
         name: data.name,
@@ -64,6 +85,7 @@ export function socketClient(type = null, socketData, notifyCallback) {
 
 
     socket.on(SC.TYPING, (data) => {
+      checkNotify(data, notifyCallback);
       store.dispatch(typing(data));
     });
 

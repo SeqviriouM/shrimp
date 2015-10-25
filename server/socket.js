@@ -50,9 +50,27 @@ export default function startSocketServer(http) {
 
 
     socket.on(CS.JOIN_TO_CHANNEL, channelId => {
-      joinToChannel(socket.sessionId, channelId, (userId) => {
+      joinToChannel(socket.sessionId, channelId, (userId, userName, channelName) => {
         socket.join(channelId);
-        socket.emit(SC.JOIN_TO_CHANNEL, {channelId, userId});
+
+        socket.emit(SC.JOIN_TO_CHANNEL, {
+          channelId,
+          userId,
+          notify: true,
+          notifyData: {
+            level: 'info',
+            message: `You have joined to channel ${channelName}`,
+          },
+        });
+
+        socket.broadcast.to(channelId).emit(SC.NEW_USER_JOINED_TO_CHANNEL, {
+          notify: true,
+          notifyData: {
+            level: 'info',
+            message: `${userName} has joined to channel ${channelName}`,
+          },
+        });
+
         loadChannelHistory(channelId, (messages) => {
           if (messages.length) {
             const messagesObj = messages.map((message) => message.toObject());
@@ -71,8 +89,16 @@ export default function startSocketServer(http) {
 
 
     socket.on(CS.ADD_CHANNEL, data => {
-      Channel.add(data, (err, result) =>
-        io.sockets.emit(SC.ADD_CHANNEL, result.toObject()));
+      Channel.add(data, (err, result) => {
+        io.sockets.emit(SC.ADD_CHANNEL, {
+          ...result.toObject(),
+          notify: true,
+          notifyData: {
+            level: 'info',
+            message: `New channel ${result.name} has been added`,
+          },
+        });
+      });
     });
 
 
@@ -91,7 +117,15 @@ export default function startSocketServer(http) {
 
     socket.on(CS.CHANGE_USER_INFO, data => {
       setUserInfo(socket.sessionId, data.email, data.name, (userData) => {
-        socket.emit(SC.CHANGE_USER_INFO, {user: userData});
+        const notifyData = {
+          level: 'success',
+          message: 'Your data has been successfully changed',
+        };
+        socket.emit(SC.CHANGE_USER_INFO, {
+          user: userData,
+          notify: true,
+          notifyData,
+        });
       });
     });
 
