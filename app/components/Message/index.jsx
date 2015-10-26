@@ -4,6 +4,7 @@ import cx from 'classnames';
 import './styles.scss';
 import moment from 'moment';
 import Linkify from 'react-linkify';
+import AttachedFiles from 'components/AttachedFiles';
 
 
 export default class Message extends React.Component {
@@ -11,6 +12,7 @@ export default class Message extends React.Component {
   static propTypes = {
     sender: PropTypes.instanceOf(Map).isRequired,
     text: PropTypes.string.isRequired,
+    files: PropTypes.object,
     timestamp: PropTypes.string.isRequired,
     currentUserId: PropTypes.string.isRequired,
     senderRepeated: PropTypes.bool.isRequired,
@@ -58,9 +60,17 @@ export default class Message extends React.Component {
     );
   }
 
+  renderFiles = (files) => {
+    return files.map((file, index) => {
+      return (
+        <a key={index} href={file.get('filePath')}>{file.get('filePath')}</a>
+      );
+    });
+  }
+
 
   render() {
-    const {sender, text, currentUserId, senderRepeated, nextMessageIsMain} = this.props;
+    const {sender, text, files, currentUserId, senderRepeated, nextMessageIsMain} = this.props;
     const isSelfMessage = sender.get('id') === currentUserId;
     const userName = (() => {
       if (isSelfMessage || senderRepeated) return null;
@@ -80,6 +90,7 @@ export default class Message extends React.Component {
           <div className='message__text'>
             <Linkify properties={{className: 'message__url', target: '_blank'}}>{text}</Linkify>
           </div>
+          <AttachedFiles files={files} />
           <div className='message__date'>{this.state.date + ' ago'}</div>
         </div>
       </li>

@@ -245,3 +245,11 @@ export function removeFile(file, callback) {
     });
   });
 }
+
+
+export function getOriginalFilenameByPath(filePath, callback) {
+  File.findOne({ filePath }, (err, file) => {
+    if (err) debug(err);
+    callback(file.originalName);
+  });
+}

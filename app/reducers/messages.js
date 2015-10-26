@@ -8,7 +8,7 @@ export function messages(state = EMPTY_LIST, action) {
   case A.INIT:
     return fromJS(action.payload.messages);
   case A.ADD_MESSAGE:
-    return state.push(action.message);
+    return state.push(fromJS(action.message));
   case A.LOG_OUT:
     return EMPTY_LIST;
   case A.LOAD_CHANNEL_HISTORY:

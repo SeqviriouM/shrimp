@@ -87,7 +87,7 @@ export default class MessageComposer extends React.Component {
         channelId: this.props.local.get('currentChannelId'),
         senderId: this.props.local.get('userId'),
         text: this.state.text,
-        files: this.state.files.toJS(),
+        files: this.state.files.toList().toJS(),
       });
       this.setState({
         text: '',
@@ -114,6 +114,8 @@ export default class MessageComposer extends React.Component {
       files: this.state.files.set(file.name, {
         _id: response.id,
         filePath: response.filePath,
+        fileType: file.type.split('/').pop(),
+        originalName: file.name,
       }),
     });
   }

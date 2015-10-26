@@ -9,6 +9,8 @@ const message = new mongoose.Schema({
   files: [{
     filePath: String,
     _id: mongoose.Schema.Types.ObjectId,
+    fileType: String,
+    originalName: String,
   }],
 });
 
