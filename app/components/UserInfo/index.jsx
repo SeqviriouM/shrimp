@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import Immutable, {Map, List} from 'immutable';
+import Immutable, {List} from 'immutable';
 import {Link} from 'react-router';
 import {Motion, spring} from 'react-motion';
 import Input from 'components/Input';
@@ -18,8 +18,7 @@ export default class UserInfo extends React.Component {
 
   static propTypes = {
     users: PropTypes.instanceOf(List).isRequired,
-    local: PropTypes.instanceOf(Map).isRequired,
-    params: PropTypes.Object,
+    params: PropTypes.object,
   }
 
   constructor(props) {
@@ -31,7 +30,9 @@ export default class UserInfo extends React.Component {
         type: 'info',
         text: 'Edit your data',
       },
-      user: {},
+      userName: '',
+      userEmail: '',
+      userAvatar: '',
       startAnimation: false,
     };
   }
@@ -43,7 +44,9 @@ export default class UserInfo extends React.Component {
 
       if (targetUser) {
         this.setState({
-          user: targetUser,
+          userName: targetUser.get('name'),
+          userEmail: targetUser.get('email'),
+          userAvatar: targetUser.get('avatar'),
         });
       }
 
@@ -61,7 +64,9 @@ export default class UserInfo extends React.Component {
       const targetUser = nextProps.users.find(user => user.get('id') === nextProps.params.userId);
 
       this.setState({
-        user: targetUser,
+        userName: targetUser.get('name'),
+        userEmail: targetUser.get('email'),
+        userAvatar: targetUser.get('avatar'),
       });
 
       this.timers.push(setTimeout(() => {
@@ -87,7 +92,7 @@ export default class UserInfo extends React.Component {
             className='user-details__tabs'
             currentTabId={1}
           >
-            <Tab id={1}>{this.state.user.get('name')}</Tab>
+            <Tab id={1}>{this.state.userName}</Tab>
           </Tabs>
           <div className='user-info'>
             <form
@@ -101,7 +106,7 @@ export default class UserInfo extends React.Component {
                 {interpolated => <img
                     style={{transform: `translateY(${interpolated.y}px)`}}
                     className='user-info__avatar'
-                    src={this.state.user.get('avatar')}
+                    src={this.state.userAvatar}
                     width='80'
                     height='80'
                   />
@@ -116,7 +121,7 @@ export default class UserInfo extends React.Component {
                   {interpolated => <Input
                       style={{transform: `translateX(${interpolated.x}px)`}}
                       className='user-info__input'
-                      value={this.state.user.get('email')}
+                      value={this.state.userEmail}
                       disabled
                     />
                   }

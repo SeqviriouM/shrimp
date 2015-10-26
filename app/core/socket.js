@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import store from '../store';
-import {Map} from 'immutable';
+import {Map, fromJS} from 'immutable';
 import {addChannel, addUserToChannel, typing} from '../actions/channels';
 import {addMessage, loadChannelHistory} from '../actions/messages';
 import {setUserInfo, joinUser} from 'actions/users';
@@ -21,7 +21,7 @@ export function socketClient(type = null, socketData, notifyCallback) {
   if (type === 'SOCKET_INIT') {
     socket.on(SC.ADD_MESSAGE, (data) => {
       checkNotify(data, notifyCallback);
-      store.dispatch(addMessage(Map(data)));
+      store.dispatch(addMessage(fromJS(data)));
     });
 
 

@@ -8,15 +8,9 @@ export default class Upload extends React.Component {
 
   static propTypes = {
     openedArea: PropTypes.bool,
+    init: PropTypes.func,
     addFile: PropTypes.func,
     removeFile: PropTypes.func,
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      files: {},
-    };
   }
 
 
@@ -30,7 +24,7 @@ export default class Upload extends React.Component {
     // This one receives the dropzone object as the first parameter
     // and can be used to additional work with the dropzone.js
     // object
-    init: null,
+    init: this.props.init || null,
     // All of these receive the event as first parameter:
     drop: null,
     dragstart: null,
@@ -40,13 +34,13 @@ export default class Upload extends React.Component {
     dragleave: null,
     // All of these receive the file as first parameter:
     addedfile: null,
-    removedfile: this.props.removeFile,
+    removedfile: this.props.removeFile || null,
     thumbnail: null,
     error: null,
     processing: null,
     uploadprogress: null,
     sending: null,
-    success: this.props.addFile,
+    success: this.props.addFile || null,
     complete: null,
     canceled: null,
     maxfilesreached: null,

@@ -27,6 +27,7 @@ export default class MessageComposer extends React.Component {
       files: new Map(),
       openedArea: false,
       typing: false,
+      dropzone: {},
     };
   }
 
@@ -35,7 +36,8 @@ export default class MessageComposer extends React.Component {
       Immutable.is(nextProps.local, this.props.local) &&
       Immutable.is(nextProps.channels, this.props.channels) &&
       Immutable.is(nextState.text, this.state.text) &&
-      Immutable.is(nextState.openedArea, this.state.openedArea)
+      Immutable.is(nextState.openedArea, this.state.openedArea) &&
+      Immutable.is(nextState.dropzone, this.state.dropzone)
     );
   }
 
@@ -91,6 +93,7 @@ export default class MessageComposer extends React.Component {
       });
       this.setState({
         text: '',
+        openedArea: false,
       });
     }
   }
@@ -109,6 +112,13 @@ export default class MessageComposer extends React.Component {
     });
   }
 
+
+  initFile = (dropzone) => {
+    this.setState({
+      dropzone,
+    });
+  }
+
   addFile = (file, response) => {
     this.setState({
       files: this.state.files.set(file.name, {
@@ -121,8 +131,8 @@ export default class MessageComposer extends React.Component {
   }
 
 
-  removeFile = (file) => {
-    if (file.status === 'success') {
+  removeFile = (file, removeFromServer = true) => {
+    if (file.status === 'success' && removeFromServer) {
       fetch('/remove-file', {
         method: 'delete',
         headers: {
@@ -189,7 +199,12 @@ export default class MessageComposer extends React.Component {
           >Send
           </button>
         </div>
-        <Upload openedArea={this.state.openedArea} addFile={this.addFile} removeFile={this.removeFile}/>
+        <Upload
+          init={this.initFile}
+          openedArea={this.state.openedArea}
+          addFile={this.addFile}
+          removeFile={this.removeFile}
+        />
       </div>
 
     );
