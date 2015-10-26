@@ -111,7 +111,10 @@ export default class MessageComposer extends React.Component {
 
   addFile = (file, response) => {
     this.setState({
-      files: this.state.files.set(file.name, response.path),
+      files: this.state.files.set(file.name, {
+        _id: response.id,
+        filePath: response.filePath,
+      }),
     });
   }
 
@@ -124,9 +127,10 @@ export default class MessageComposer extends React.Component {
           'Accept': 'application/json',
           'Content-type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           fileName: file.name,
-          filePath: this.state.files.get(file.name),
+          filePath: this.state.files.get(file.name).filePath,
         }),
       }).then((res) => {
         if (res.status === 200) {

@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import startSocketServer from './socket.js';
 import getConfig from './config.js';
 import {createDefaultChannel} from './fill-db.js';
-import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword, saveFile} from './db/db_core.js';
+import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword, saveFile, removeFile} from './db/db_core.js';
 import getInitState from './initial-state';
 import {generateSessionId} from './lib/core.js';
 // const debug = require('debug')('shrimp:server');
@@ -123,16 +123,21 @@ app.post('/upload', (req, res) => {
     originalName: req.file.originalname,
     user: req.cookies.sessionId,
   };
-  saveFile(savedFile, () => {
-    console.log('Uploaded');
-    res.json(req.file);
+  saveFile(savedFile, (file) => {
+    res.json(file.toObject());
   });
 });
 
 app.delete('/remove-file', (req, res) => {
-  fs.unlink(req.body.filePath, () => {
-    res.json({
-      fileName: req.body.fileName,
+  const removedFile = {
+    user: req.cookies.sessionId,
+    filePath: req.body.filePath,
+  };
+  removeFile(removedFile, () => {
+    fs.unlink(req.body.filePath, () => {
+      res.json({
+        fileName: req.body.fileName,
+      });
     });
   });
 });

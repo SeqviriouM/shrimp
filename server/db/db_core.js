@@ -230,8 +230,18 @@ export function changePassword(user, password, callback) {
 
 
 export function saveFile(file, callback) {
-  new File(file).save((err) => {
+  new File(file).save((err, savedFile) => {
     if (err) debug(err);
-    callback();
+    callback(savedFile);
+  });
+}
+
+
+export function removeFile(file, callback) {
+  File.findOne(file).then(selectedFile => {
+    selectedFile.remove((err) => {
+      if (err) debug(err);
+      callback();
+    });
   });
 }
