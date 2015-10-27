@@ -43,6 +43,26 @@
   .user-info {
     &__form {
       padding: 40px 75px;
+
+      &:hover {
+        .user-info__input-area {
+          .user-info__input {
+            float: right;
+
+            width: 70%;
+          }
+          .user-info__description {
+            float: left;
+
+            width: 30%;
+            margin-top: 10px;
+
+            vertical-align: bottom;
+
+            line-height: 54px;
+          }
+        }
+      }
     }
     &__avatar-area {
       margin-bottom: 20px;
@@ -52,8 +72,24 @@
         position: relative;
       }
     }
-    &__input {
+    &__input-area {
+      overflow: hidden;
+    }
+    &__description {
+      position: absolute;
+
       margin-top: 10px;
+
+      vertical-align: bottom;
+
+      line-height: 54px;
+    }
+    &__input {
+      float: right;
+
+      margin-top: 10px;
+
+      transition: width .7s ease;
     }
   }
 }

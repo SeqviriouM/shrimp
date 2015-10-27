@@ -116,7 +116,7 @@ export default function startSocketServer(http) {
 
 
     socket.on(CS.CHANGE_USER_INFO, data => {
-      setUserInfo(socket.sessionId, data.email, data.name, (userData) => {
+      setUserInfo(socket.sessionId, data.email, data.name, data.country, (userData) => {
         const notifyData = {
           level: 'success',
           message: 'Your data has been successfully changed',
