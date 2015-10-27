@@ -24,9 +24,10 @@ export default class MessageComposer extends React.Component {
     this.messageMaxLength = 220;
     this.state = {
       text: '',
-      files: {},
+      files: new Map(),
       openedArea: false,
       typing: false,
+      dropzone: {},
     };
   }
 
@@ -35,7 +36,8 @@ export default class MessageComposer extends React.Component {
       Immutable.is(nextProps.local, this.props.local) &&
       Immutable.is(nextProps.channels, this.props.channels) &&
       Immutable.is(nextState.text, this.state.text) &&
-      Immutable.is(nextState.openedArea, this.state.openedArea)
+      Immutable.is(nextState.openedArea, this.state.openedArea) &&
+      Immutable.is(nextState.dropzone, this.state.dropzone)
     );
   }
 
@@ -82,14 +84,21 @@ export default class MessageComposer extends React.Component {
 
   sendMessage = () => {
     const text = this.state.text.trim();
-    if (text) {
+    if (text || this.state.files.size > 0) {
       this.props.newMessage({
         channelId: this.props.local.get('currentChannelId'),
         senderId: this.props.local.get('userId'),
         text: this.state.text,
+        files: this.state.files.toList().toJS(),
       });
       this.setState({
         text: '',
+        openedArea: false,
+        typing: false,
+      });
+      this.props.sendTypingAction({
+        channelId: this.props.local.get('currentChannelId'),
+        typingAction: false,
       });
     }
   }
@@ -108,26 +117,48 @@ export default class MessageComposer extends React.Component {
     });
   }
 
-  addFile = (file, response) => {
-    this.state.files[file.name] = response.path;
+
+  initFile = (dropzone) => {
     this.setState({
-      files: this.state.files,
+      dropzone,
+    });
+  }
+
+  addFile = (file, response) => {
+    this.setState({
+      files: this.state.files.set(file.name, {
+        _id: response.id,
+        filePath: response.filePath,
+        fileType: file.type.split('/').pop(),
+        originalName: file.name,
+      }),
     });
   }
 
 
-  removeFile = (file) => {
-    if (file.status === 'success') {
+  removeFile = (file, removeFromServer = true) => {
+    if (file.status === 'success' && removeFromServer) {
       fetch('/remove-file', {
         method: 'delete',
         headers: {
           'Accept': 'application/json',
           'Content-type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           fileName: file.name,
-          filePath: this.state.files[file.name],
+          filePath: this.state.files.get(file.name).filePath,
         }),
+      }).then((res) => {
+        if (res.status === 200) {
+          res.json().then(data => {
+            this.setState({
+              files: this.state.files.delete(data.fileName),
+            });
+          });
+        } else {
+          return;
+        }
       });
     }
   }
@@ -173,7 +204,12 @@ export default class MessageComposer extends React.Component {
           >Send
           </button>
         </div>
-        <Upload openedArea={this.state.openedArea} addFile={this.addFile} removeFile={this.removeFile}/>
+        <Upload
+          init={this.initFile}
+          openedArea={this.state.openedArea}
+          addFile={this.addFile}
+          removeFile={this.removeFile}
+        />
       </div>
 
     );

@@ -47,6 +47,7 @@ export default class MessageList extends React.Component {
             senderRepeated={senderRepeated}
             nextMessageIsMain={nextMessageIsMain}
             text={message.get('text')}
+            files={message.get('files')}
             currentUserId={local.get('userId')}
             timestamp={message.get('timestamp')}
           />

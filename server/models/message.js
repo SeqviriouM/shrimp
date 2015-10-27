@@ -6,6 +6,12 @@ const message = new mongoose.Schema({
   channelId: mongoose.Schema.Types.ObjectId,
   text: String,
   timestamp: { type: Date, default: Date.now },
+  files: [{
+    filePath: String,
+    _id: mongoose.Schema.Types.ObjectId,
+    fileType: String,
+    originalName: String,
+  }],
 });
 
 message.statics.getAll = function getAll() {

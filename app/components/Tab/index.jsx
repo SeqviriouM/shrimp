@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import cx from 'classnames';
@@ -23,7 +24,7 @@ export default class Tab extends React.Component {
 
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.isCurrent !== this.props.isCurrent;
+    return !Immutable.is(nextProps, this.props);
   }
 
 

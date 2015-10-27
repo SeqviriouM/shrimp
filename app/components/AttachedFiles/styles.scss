@@ -1,0 +1,29 @@
+.attached-files {
+  clear: both;
+  overflow: hidden;
+
+  margin: 5px 0;
+
+  &__type {
+    float: left;
+
+    width: 32px;
+    height: 32px;
+  }
+
+  &__name {
+    float: left;
+    overflow: hidden;
+
+    max-width: 300px;
+    margin-left: 10px;
+
+    text-overflow: ellipsis;
+
+    line-height: 32px;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}

@@ -4,15 +4,16 @@ import http from 'http';
 import multer from 'multer';
 import fs from 'fs';
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import startSocketServer from './socket.js';
 import getConfig from './config.js';
 import {createDefaultChannel} from './fill-db.js';
-import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword} from './db/db_core.js';
+import {signInUser, signUpUser, checkUserEmail, checkEmailExist, setSessionId, checkOldPassword, changePassword, saveFile, removeFile, getOriginalFilenameByPath} from './db/db_core.js';
 import getInitState from './initial-state';
 import {generateSessionId} from './lib/core.js';
-// const debug = require('debug')('shrimp:server');
+const debug = require('debug')('shrimp:server');
 
 const app = express();
 const server = new http.Server(app);
@@ -46,7 +47,17 @@ if (isDev && isDebug && process.env.DEBUG.indexOf('shrimp:front') === 0) {
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(multer({ dest: 'uploads/' }).single('file'));
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    crypto.pseudoRandomBytes(16, (err, raw) => {
+      if (err) return cb(err);
+      cb(null, raw.toString('hex') + path.extname(file.originalname));
+    });
+  },
+});
+
+app.use(multer({ storage: storage }).single('file'));
 
 startSocketServer(server);
 
@@ -55,9 +66,6 @@ if (isMongoConnect === 'yes') {
   createDefaultChannel();
 }
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../app/root.html'));
-});
 
 app.post('/signin', (req, res) => {
   signInUser(req.body.email, req.body.password, (userData) => {
@@ -116,14 +124,57 @@ app.post('/changepass', (req, res) => {
   });
 });
 
+
 app.post('/upload', (req, res) => {
-  res.json(req.file);
+  const savedFile = {
+    fileName: req.file.filename,
+    filePath: req.file.path,
+    originalName: req.file.originalname,
+    user: req.cookies.sessionId,
+  };
+  saveFile(savedFile, (file) => {
+    res.json(file.toObject());
+  });
 });
 
+
 app.delete('/remove-file', (req, res) => {
-  fs.unlink(req.body.filePath, () => {
-    res.sendStatus(200);
+  const removedFile = {
+    user: req.cookies.sessionId,
+    filePath: req.body.filePath,
+  };
+  removeFile(removedFile, () => {
+    fs.unlink(req.body.filePath, () => {
+      res.json({
+        fileName: req.body.fileName,
+      });
+    });
   });
+});
+
+
+app.get('/uploads/:file', (req, res) => {
+  const file = req.params.file;
+  const filePath = 'uploads/' + file;
+
+  getOriginalFilenameByPath(filePath, (originalName) => {
+    res.download(filePath, originalName, (err) => {
+      if (err) debug(err);
+    });
+  });
+});
+
+
+app.get('/fileIcons/:file', (req, res) => {
+  const file = req.params.file;
+  const filePath = 'fileIcons/' + file;
+
+  res.download(filePath);
+});
+
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../app/root.html'));
 });
 
 server.listen(port);
