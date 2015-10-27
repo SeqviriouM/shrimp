@@ -20,16 +20,12 @@ export default class AttachedFiles extends React.Component {
     const fileType = file.get('fileType');
     const asImage = this.imageSet.has(fileType);
 
-    if (asImage) {
-      return (
-        <div>
-          <img src={file.get('filePath')} />
-          <div>{file.get('originalName')}</div>
-        </div>
-      );
-    } else {
-      return <span>{file.get('originalName')}</span>;
-    }
+    return (asImage) ?
+      (<div>
+        <img src={file.get('filePath')} />
+        <div>{file.get('originalName')}</div>
+      </div>)
+      : (<span>{file.get('originalName')}</span>);
   }
 
   renderFiles = (files) => {

@@ -94,6 +94,11 @@ export default class MessageComposer extends React.Component {
       this.setState({
         text: '',
         openedArea: false,
+        typing: false,
+      });
+      this.props.sendTypingAction({
+        channelId: this.props.local.get('currentChannelId'),
+        typingAction: false,
       });
     }
   }

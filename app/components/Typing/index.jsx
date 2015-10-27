@@ -30,7 +30,7 @@ export default class Typing extends React.Component {
     const getStyles = (prevStyles) => (
       prevStyles.map((_, index) => {
         return (index === 0)
-          ? {y: spring(this.props.isTyping ? 20 : 100, this.props.motionConfig)}
+          ? {y: spring(this.props.isTyping ? 0 : 100, this.props.motionConfig)}
           : {y: spring(prevStyles[index - 1].y, this.props.motionConfig)};
       })
     );
