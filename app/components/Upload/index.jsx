@@ -61,6 +61,10 @@ export default class Upload extends React.Component {
 
   djsConfig = {
     addRemoveLinks: true,
+    maxFileSize: 10,
+    dictFileTooBig: true,
+    dictMaxFilesExceeded: true,
+    maxFile: 10,
   };
 
 

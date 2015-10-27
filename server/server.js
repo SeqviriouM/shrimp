@@ -57,7 +57,7 @@ const storage = multer.diskStorage({
   },
 });
 
-app.use(multer({ storage: storage }).single('file'));
+app.use(multer({ storage: storage, limits: { fileSize: 10000000 } }).single('file'));
 
 startSocketServer(server);
 
