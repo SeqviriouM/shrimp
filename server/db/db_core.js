@@ -254,3 +254,15 @@ export function getOriginalFilenameByPath(filePath, callback) {
     callback(file.originalName);
   });
 }
+
+
+export function checkUserIdBySessionId(sessionId, userId, callback) {
+  User.getBySessionId(sessionId)
+    .then((user) => {
+      if (user && user.id === userId) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+}
