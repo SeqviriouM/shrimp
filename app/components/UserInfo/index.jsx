@@ -33,7 +33,9 @@ export default class UserInfo extends React.Component {
       userName: '',
       userEmail: '',
       userAvatar: '',
+      userCountry: '',
       startAnimation: false,
+      hoverAnimation: false,
     };
   }
 
@@ -47,6 +49,7 @@ export default class UserInfo extends React.Component {
           userName: targetUser.get('name'),
           userEmail: targetUser.get('email'),
           userAvatar: targetUser.get('avatar'),
+          userCountry: targetUser.get('country'),
         });
       }
 
@@ -67,6 +70,7 @@ export default class UserInfo extends React.Component {
         userName: targetUser.get('name'),
         userEmail: targetUser.get('email'),
         userAvatar: targetUser.get('avatar'),
+        userCountry: targetUser.get('country'),
       });
 
       this.timers.push(setTimeout(() => {
@@ -84,6 +88,20 @@ export default class UserInfo extends React.Component {
     }
   }
 
+
+  startHoverAnimation = () => {
+    this.setState({
+      hoverAnimation: true,
+    });
+  }
+
+
+  stopHoverAnimation = () => {
+    this.setState({
+      hoverAnimation: false,
+    });
+  }
+
   render() {
     return (
       <div className='user-details'>
@@ -97,6 +115,8 @@ export default class UserInfo extends React.Component {
           <div className='user-info'>
             <form
               className='user-info__form'
+              onMouseOver={this.startHoverAnimation}
+              onMouseOut={this.stopHoverAnimation}
             >
               <div className='user-info__avatar-area'>
                 <Motion
@@ -115,6 +135,18 @@ export default class UserInfo extends React.Component {
               </div>
               <div className='user-info__input-area'>
                 <Motion
+                  defaultStyle={{x: spring(-500)}}
+                  style={{x: spring(this.state.hoverAnimation ? 0 : -500, [140, 22])}}
+                  >
+                  {interpolated => <div
+                      className='user-info__description'
+                      style={{transform: `translateX(${interpolated.x}px)`}}
+                    >
+                      <span>Email: </span>
+                    </div>
+                  }
+                </Motion>
+                <Motion
                     defaultStyle={{x: spring(-500)}}
                     style={{x: spring(this.state.startAnimation ? 0 : -500, [140, 12])}}
                   >
@@ -122,6 +154,32 @@ export default class UserInfo extends React.Component {
                       style={{transform: `translateX(${interpolated.x}px)`}}
                       className='user-info__input'
                       value={this.state.userEmail}
+                      disabled
+                    />
+                  }
+                </Motion>
+              </div>
+              <div className='user-info__input-area'>
+                <Motion
+                  defaultStyle={{x: spring(-500)}}
+                  style={{x: spring(this.state.hoverAnimation ? 0 : -500, [140, 22])}}
+                  >
+                  {interpolated => <div
+                      className='user-info__description'
+                      style={{transform: `translateX(${interpolated.x}px)`}}
+                    >
+                      <span>Country: </span>
+                    </div>
+                  }
+                </Motion>
+                <Motion
+                    defaultStyle={{x: spring(500)}}
+                    style={{x: spring(this.state.startAnimation ? 0 : 500, [140, 12])}}
+                  >
+                  {interpolated => <Input
+                      style={{transform: `translateX(${interpolated.x}px)`}}
+                      className='user-info__input'
+                      value={this.state.userCountry}
                       disabled
                     />
                   }

@@ -4,7 +4,7 @@ import {Map, fromJS} from 'immutable';
 import {addChannel, addUserToChannel, typing} from '../actions/channels';
 import {addMessage, loadChannelHistory} from '../actions/messages';
 import {setUserInfo, joinUser} from 'actions/users';
-import {init, initUser, logOut} from '../actions/local';
+import {init, initUser, logOut, getInitData} from '../actions/local';
 import {SC} from '../../constants';
 
 
@@ -86,6 +86,30 @@ export function socketClient(type = null, socketData, notifyCallback) {
     socket.on(SC.TYPING, (data) => {
       checkNotify(data, notifyCallback);
       store.dispatch(typing(data));
+    });
+
+
+    socket.on('reconnecting', () => {
+      const data = {
+        notify: true,
+        notifyData: {
+          level: 'error',
+          message: 'Lost connection. Trying to reconnect',
+        },
+      };
+      checkNotify(data, notifyCallback);
+    });
+
+    socket.on('reconnect', () => {
+      const data = {
+        notify: true,
+        notifyData: {
+          level: 'success',
+          message: 'Successfully reconnected',
+        },
+      };
+      checkNotify(data, notifyCallback);
+      store.dispatch(getInitData());
     });
 
 

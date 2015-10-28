@@ -169,6 +169,7 @@ export default class MessageComposer extends React.Component {
     const isTyping = currentChannel ? currentChannel.get('typing') : false;
 
     const leftSymbols = this.messageMaxLength - this.state.text.length;
+    const warningLeftSymbols = 0.2 * this.messageMaxLength;
 
     return (
       <div className='composer'>
@@ -192,6 +193,7 @@ export default class MessageComposer extends React.Component {
           />
           <div
             className={cx('composer__info', {
+              'composer__info_warning': (leftSymbols <= warningLeftSymbols && leftSymbols > 0),
               'composer__info_error': leftSymbols <= 0,
             })}
           >

@@ -152,6 +152,11 @@
     font-size: 12px;
     line-height: 21px;
 
+    &_warning {
+      color: $c-gray-20;
+      background: $c-yellow;
+    }
+
     &_error {
       animation: bounce 2s linear infinite;
 

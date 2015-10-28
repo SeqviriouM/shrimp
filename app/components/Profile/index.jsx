@@ -35,12 +35,10 @@ export default class Profile extends React.Component {
       shakeInfo: false,
       email: '',
       name: '',
-      password: '',
-      repeatedPassword: '',
-      showPasswordError: false,
-      showSecondPasswordError: false,
+      country: '',
       showEmailError: false,
       showNameError: false,
+      showCountryError: false,
       inProgress: false,
     };
   }
@@ -53,6 +51,7 @@ export default class Profile extends React.Component {
       this.setState({
         email: currentUser.get('email'),
         name: currentUser.get('name'),
+        country: currentUser.get('country'),
       });
     }
   }
@@ -64,6 +63,7 @@ export default class Profile extends React.Component {
       this.setState({
         email: currentUser.get('email'),
         name: currentUser.get('name'),
+        country: currentUser.get('country'),
       });
     }
   }
@@ -124,10 +124,21 @@ export default class Profile extends React.Component {
       });
     }
 
+    if (!this.state.country) {
+      return this.setState({
+        showCountryError: true,
+        info: {
+          type: 'error',
+          text: 'Country is required',
+        },
+      });
+    }
+
 
     const changedData = {
       email: this.state.email,
       name: this.state.name,
+      country: this.state.country,
     };
 
 
@@ -152,6 +163,12 @@ export default class Profile extends React.Component {
     });
   }
 
+  countryChange = e => {
+    this.setState({
+      country: e.target.value,
+      showCountryError: false,
+    });
+  }
 
   render() {
     return (
@@ -182,6 +199,15 @@ export default class Profile extends React.Component {
             name='name'
             placeholder='Name'
             onChange={this.nameChange}
+          />
+          <Input
+            className={cx('profile__input', {
+              'input_type_error': this.state.showCountryError,
+            })}
+            value={this.state.country}
+            name='country'
+            placeholder='Country'
+            onChange={this.countryChange}
           />
           <Button
             className='profile__submit-button'
