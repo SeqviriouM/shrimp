@@ -93,6 +93,7 @@ export default class MessageComposer extends React.Component {
       });
       this.setState({
         text: '',
+        files: new Map(),
         openedArea: false,
         typing: false,
       });
