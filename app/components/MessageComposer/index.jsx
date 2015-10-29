@@ -102,6 +102,10 @@ export default class MessageComposer extends React.Component {
         typingAction: false,
       });
     }
+    this.state.dropzone.files.forEach((file) => {
+      this.state.dropzone.emit('removedfile', file);
+    });
+    this.state.dropzone.emit('reset');
   }
 
 
@@ -137,8 +141,8 @@ export default class MessageComposer extends React.Component {
   }
 
 
-  removeFile = (file, removeFromServer = true) => {
-    if (file.status === 'success' && removeFromServer) {
+  removeFile = (file) => {
+    if (file.status === 'success') {
       fetch('/remove-file', {
         method: 'delete',
         headers: {
