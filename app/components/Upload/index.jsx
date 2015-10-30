@@ -13,7 +13,6 @@ export default class Upload extends React.Component {
     removeFile: PropTypes.func,
   }
 
-
   componentConfig = {
     iconFiletypes: ['.jpg', '.png', '.gif', '.pdf', '.doc', 'html', 'xml', '...'],
     showFiletypeIcon: true,
@@ -33,6 +32,7 @@ export default class Upload extends React.Component {
     dictMaxFilesExceeded: true,
     maxFile: 10,
   }
+
 
   render() {
     return (
