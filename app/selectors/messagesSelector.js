@@ -9,7 +9,9 @@ const messagesSelector = state =>
 
 const currentChannelMessagesSelector = createSelector(
   [state => state, messagesSelector],
-  (state, messages) => messages.filter(m => m.get('channelId') === state.local.get('currentChannelId'))
+  (state, messages) => messages
+    .filter(m => m.get('channelId') === state.local.get('currentChannelId'))
+    .sort((first, second) => new Date(first.get('timestamp')) - new Date(second.get('timestamp')))
 );
 
 const filterValue = state => state.messagesFilterValue;

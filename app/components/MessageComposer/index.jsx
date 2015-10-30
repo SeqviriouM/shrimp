@@ -93,6 +93,7 @@ export default class MessageComposer extends React.Component {
       });
       this.setState({
         text: '',
+        files: new Map(),
         openedArea: false,
         typing: false,
       });
@@ -101,6 +102,11 @@ export default class MessageComposer extends React.Component {
         typingAction: false,
       });
     }
+    this.state.dropzone.files.forEach((file) => {
+      this.state.dropzone.emit('removedfile', file, false);
+    });
+    this.state.dropzone.files.splice(0);
+    this.state.dropzone.emit('reset');
   }
 
 
